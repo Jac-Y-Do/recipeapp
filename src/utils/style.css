@@ -1,0 +1,21 @@
+@media (max-width: 600px) {
+  .displayInlineSearch {
+    display: hidden;
+    left: -99999px;
+  }
+  .displayBlockSearch {
+    display: block;
+  }
+}
+
+@media (min-width: 601px) {
+  .displayInlineSearch {
+    display: block;
+  }
+  .displayBlockSearch {
+    display: hidden;
+    left: -9999px;
+    height: 1px;
+    overflow: hidden;
+  }
+}
