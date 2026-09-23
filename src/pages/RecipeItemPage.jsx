@@ -21,20 +21,30 @@ export const RecipeItemPage = ({ item, clickFn }) => {
   return (
     <>
       <PageHeader />
-
-      <Image
-        src={item.recipe.image}
-        w='100%'
-        objectFit='cover'
-        aspectRatio={{ base: 16 / 9 }}
-        maxH={{ base: 400, sm: 400, lg: 500 }}
-      />
-
+      <Box position='relative' width='100%' margin='auto' overflow='hidden'>
+        <Image
+          src={item.recipe.image}
+          w='100%'
+          objectFit='cover'
+          aspectRatio={{ base: 16 / 9 }}
+          maxH={{ base: 400, sm: 400, lg: 500 }}
+        />
+        <Box position='absolute' top={2} left={2}>
+          <Button
+            w={{ base: 'full', sm: 'fit-content' }}
+            onClick={() => clickFn(undefined)}
+          >
+            Back to overview
+          </Button>
+        </Box>
+      </Box>
       <SimpleGrid
         columns={{ base: 1, sm: 1, md: 2 }}
         gap={{ base: 4, md: 6 }}
         marginTop='16px'
         paddingBottom={16}
+        maxW='1440px'
+        marginX='auto'
       >
         <Box marginLeft={10} marginRight={10}>
           <Stack flex='1' gap={{ base: 2 }}>
@@ -55,37 +65,27 @@ export const RecipeItemPage = ({ item, clickFn }) => {
 
             <Heading size={{ base: 'lg', sm: 'lg' }}>Ingredients:</Heading>
 
-            <Text>
-              {item.recipe.ingredientLines.map(ingredient => (
-                <p key={ingredient}>{ingredient}</p>
-              ))}
-            </Text>
-
-            <Heading size={{ base: 'lg', sm: 'lg' }}>Nutrients:</Heading>
-            <Text>
-              {Object.entries(item.recipe.totalNutrients).map(
-                ([key, nutrient]) => (
-                  <p key={key}>
-                    {nutrient.label}: {nutrient.quantity.toFixed(2)}{' '}
-                    {nutrient.unit}
-                  </p>
-                )
-              )}
-            </Text>
+            {item.recipe.ingredientLines.map(ingredient => (
+              <Text key={ingredient}>{ingredient}</Text>
+            ))}
           </Stack>
         </Box>
 
         <Box marginLeft={10} marginRight={10}>
           `
           <Stack flex='1' gap={{ base: 2 }}>
-            {item.recipe.dietLabels.length > 0 && 'Diet:'}
+            {item.recipe.dietLabels.length > 0 && (
+              <Heading size={{ base: 'lg', sm: 'lg' }}>Diet:</Heading>
+            )}
             <Flex gap={2} wrap='wrap'>
               {item.recipe.dietLabels.map(label => (
                 <RecipeTag key={label}>{label}</RecipeTag>
               ))}
             </Flex>
 
-            {item.recipe.healthLabels.length > 0 && 'Health labels:'}
+            {item.recipe.healthLabels.length > 0 && (
+              <Heading size={{ base: 'lg', sm: 'lg' }}>Health labels:</Heading>
+            )}
             <Flex gap={2} wrap='wrap'>
               {item.recipe.healthLabels.map(label => (
                 <VeganTag label={label} key={label}>
@@ -94,19 +94,25 @@ export const RecipeItemPage = ({ item, clickFn }) => {
               ))}
             </Flex>
 
-            {item.recipe.cautions.length > 0 && 'Caution:'}
+            <Heading size={{ base: 'lg', sm: 'lg' }}>Nutrients:</Heading>
+
+            {Object.entries(item.recipe.totalNutrients).map(
+              ([key, nutrient]) => (
+                <Text key={key}>
+                  {nutrient.label}: {nutrient.quantity.toFixed(2)}{' '}
+                  {nutrient.unit}
+                </Text>
+              )
+            )}
+
+            {item.recipe.cautions.length > 0 && (
+              <Heading size={{ base: 'lg', sm: 'lg' }}>Caution:</Heading>
+            )}
             <Flex gap={2} wrap='wrap'>
               {item.recipe.cautions.map(label => (
                 <WarningTag key={label}>{label}</WarningTag>
               ))}
             </Flex>
-
-            <Button
-              w={{ base: 'full', sm: 'fit-content' }}
-              onClick={() => clickFn(undefined)}
-            >
-              Back to overview
-            </Button>
           </Stack>
         </Box>
       </SimpleGrid>

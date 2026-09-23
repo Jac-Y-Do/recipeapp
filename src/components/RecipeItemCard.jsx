@@ -1,12 +1,16 @@
 import { Card, Image, Box, Stack, Heading, Text, Flex } from '@chakra-ui/react'
 import { RecipeTag, VeganTag, WarningTag } from './RecipeTag'
 // import { data } from '../utils/data'
+import { useTheme } from 'next-themes'
 
 const capitalizeFirst = ({ str }) => {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 export const RecipeItemCard = ({ item, clickFn }) => {
+  const { resolvedTheme } = useTheme()
+  // Gebruik resolvedTheme uit ColorModeToggle voor de color modus (light/dark)
+
   return (
     <Card.Root
       borderRadius='xl'
@@ -14,15 +18,15 @@ export const RecipeItemCard = ({ item, clickFn }) => {
       h='auto'
       onClick={() => clickFn(item)}
       cursor='pointer'
+      transition='transform 0.15s ease'
+      shadow='md'
+      backgroundColor={resolvedTheme === 'light' ? '#C6CBAD' : '#283618'} // Lichtgroen in light mode, donkergroen in dark mode
+      color={resolvedTheme === 'light' ? 'black' : 'white'} // Zwart in light mode, wit in dark mode
       _hover={{
         transform: 'scale(1.01)',
-        backgroundColor: '#949F72',
-        color: 'white'
+        backgroundColor: resolvedTheme === 'light' ? '#949F72' : '#3A4A28', // Donkerder groen in dark mode
+        color: resolvedTheme === 'light' ? 'white' : '#C6CBAD' // Wit in light mode, lichtgroen in dark mode
       }}
-      transition='transform 0.15s ease'
-      backgroundColor=' #C6CBAD'
-      shadow='md'
-      color='black'
     >
       <Card.Body>
         <Box

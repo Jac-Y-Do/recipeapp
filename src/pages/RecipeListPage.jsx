@@ -18,7 +18,6 @@ import '../utils/style.css'
 export const RecipeListPage = ({ clickFn }) => {
   const [recipes, setRecipes] = useState(data.hits)
   const [searchItem, setSearchItem] = useState('')
-  const [errorMessage, setErrorMessage] = useState('')
 
   const handleInputChange = e => {
     // get the value of the search
@@ -26,28 +25,26 @@ export const RecipeListPage = ({ clickFn }) => {
     // set the searchItem state
     setSearchItem(searchTerm)
 
-    // no entry -> show aal recipes
+    // no entry -> show all recipes
     if (!searchTerm.trim()) {
       setRecipes(data.hits)
+      return
     }
 
-    // filter all recipes labels for the searchTerm
-    const filteredItems = data.hits.filter(gerecht =>
-      gerecht.recipe.label.toLowerCase().includes(searchTerm.toLowerCase())
-    )
+    // filter all recipes labels and healthLabels for the searchTerm
+    const filteredItems = data.hits.filter(gerecht => {
+      const searchLabel = gerecht.recipe.label
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+      const searchHealthLabel = gerecht.recipe.healthLabels.some(label =>
+        label.toLowerCase().includes(searchTerm.toLowerCase('veg'))
+      )
+
+      return searchLabel || searchHealthLabel
+    })
     // update the recipes
     setRecipes(filteredItems)
   }
-
-  useEffect(() => {
-    // set message on empty result
-    if (recipes.length === 0) {
-      setErrorMessage('No recipes found...')
-    }
-    if (recipes.length > 0) {
-      setErrorMessage(null)
-    }
-  }, [recipes])
 
   useEffect(() => {
     // 👇️ Scroll to top on page load
@@ -66,7 +63,7 @@ export const RecipeListPage = ({ clickFn }) => {
         shadow='sm'
       >
         <Container>
-          <Flex h={16} align='center'>
+          <Flex h={16} align='center' maxW='1440px' marginX='auto'>
             <Heading size='3xl' color='white' paddingRight={10}>
               EatMe
             </Heading>
@@ -77,6 +74,7 @@ export const RecipeListPage = ({ clickFn }) => {
               css={{ color: 'white' }}
               paddingRight={10}
               className='displayInlineSearch'
+              borderRadius='lg'
             >
               <Input
                 placeholder='search...'
@@ -85,6 +83,7 @@ export const RecipeListPage = ({ clickFn }) => {
                 onChange={handleInputChange}
                 name='myInput'
                 value={searchItem}
+                borderColor={'#283618'}
               />
             </InputGroup>
 
@@ -103,22 +102,24 @@ export const RecipeListPage = ({ clickFn }) => {
         shadow='sm'
         className='displayBlockSearch'
       >
-        <InputGroup
-          flex='1'
-          startElement={<LuSearch />}
-          css={{ color: 'white' }}
-          padding={4}
-          className='displayBlockSearch'
-        >
-          <Input
-            placeholder='search...'
-            _placeholder={{ color: 'white' }}
-            css={{ 'background-color': '#606C38', color: 'white' }}
-            onChange={handleInputChange}
-            name='myInput'
-            value={searchItem}
-          />
-        </InputGroup>
+        <Flex padding='4' paddingTop='0' align='center'>
+          <InputGroup
+            flex='1'
+            startElement={<LuSearch />}
+            css={{ color: 'white' }}
+            className='displayBlockSearch'
+          >
+            <Input
+              placeholder='search...'
+              _placeholder={{ color: 'white' }}
+              css={{ 'background-color': '#606C38', color: 'white' }}
+              onChange={handleInputChange}
+              name='myInput'
+              value={searchItem}
+              borderColor={'#283618'}
+            />
+          </InputGroup>
+        </Flex>
       </Box>
 
       <Container>
@@ -130,16 +131,16 @@ export const RecipeListPage = ({ clickFn }) => {
         >
           {recipes.map(item => (
             <RecipeItemCard
-              key={crypto.randomUUID()}
+              key={item.recipe.name}
               item={item}
               clickFn={clickFn}
             />
           ))}
         </SimpleGrid>
       </Container>
-      {errorMessage && (
+      {recipes.length === 0 && (
         <Container centerContent fontSize={{ base: '3xl' }}>
-          {errorMessage}
+          No recipes found...
         </Container>
       )}
     </>

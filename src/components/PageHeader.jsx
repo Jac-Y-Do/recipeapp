@@ -1,14 +1,5 @@
-import {
-  Box,
-  Flex,
-  Heading,
-  HStack,
-  Button,
-  Spacer,
-  Container
-} from '@chakra-ui/react'
+import { Box, Flex, Heading, HStack, Spacer, Container } from '@chakra-ui/react'
 import { ColorModeToggle } from './ui/ColorModeToggle'
-import { LuX } from 'react-icons/lu'
 
 export const PageHeader = () => {
   const listPage = () => {
@@ -26,7 +17,7 @@ export const PageHeader = () => {
       shadow='sm'
     >
       <Container>
-        <Flex h={16} align='center'>
+        <Flex h={16} align='center' maxW='1440px' marginX='auto'>
           <Heading
             size='3xl'
             color='white'
@@ -39,15 +30,6 @@ export const PageHeader = () => {
           <Spacer />
           <HStack spacing={6}>
             <ColorModeToggle padding={10} />
-            <Button
-              variant='ghost'
-              color='#F8F6E8'
-              _hover={{ color: '#283618' }}
-              onClick={listPage}
-              _dark={{ _hover: { color: '#BBACC1' } }}
-            >
-              <LuX />
-            </Button>
           </HStack>
         </Flex>
       </Container>
