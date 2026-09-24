@@ -131,7 +131,7 @@ export const RecipeListPage = ({ clickFn }) => {
         >
           {recipes.map(item => (
             <RecipeItemCard
-              key={item.recipe.name}
+              key={item.recipe.label}
               item={item}
               clickFn={clickFn}
             />
